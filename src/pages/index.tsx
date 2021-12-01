@@ -1,13 +1,13 @@
 import { GetStaticProps } from 'next';
 
 import { getPrismicClient } from '../services/prismic';
-import {RichText} from 'prismic-dom';
 import commonStyles from '../styles/common.module.scss';
 import styles from './home.module.scss';
 import Head from 'next/head'
 import Primisc from  '@prismicio/client'
 import { format } from 'date-fns';
-import ptBR from 'date-fns/locale/pt-BR';
+import Link from 'next/link'
+import { useState , useEffect} from 'react';
 
 interface Post {
   uid?: string;
@@ -30,12 +30,25 @@ interface HomeProps {
 
  export default function Home(props : HomeProps) {
    // TODO
+  
    return (
     <>
-      <Head>
+     <Head>
         <title>SpaceTraveling | Posts</title>
       </Head>
 
+      <main>
+        
+        <div className = {styles.container}>
+         {
+            props.postsPagination?.results.map(post =>{            
+              return(                
+                <p key= {post.uid}>{post.data.author}</p>                
+              )
+            })
+          }
+        </div>
+      </main>
     </>
    )
  }
@@ -51,7 +64,7 @@ export const getStaticProps : GetStaticProps = async () => {
     }
    );
 
-   const constentsPost  = postsResponse.results.map(post=>{
+   const constentsPost  = await postsResponse.results.map(post=>{
      return (
        {
          uid:post.uid,
@@ -65,17 +78,15 @@ export const getStaticProps : GetStaticProps = async () => {
         )
       })
       
-      const propReturn = {
+      const postsPagination = {
         next_page : postsResponse.next_page,
         results : constentsPost
       }
   
-     // console.log(JSON.stringify(propReturn) , 2)
   return{
     props: {
-      propReturn,
-      
+      postsPagination,
     }
   }
-  // TODO
+  
 };
