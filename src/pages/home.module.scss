@@ -1,4 +1,80 @@
 // TODO
-.container{
-    color: antiquewhite;
+.posts{
+
+    max-width: 700px;
+    margin: 5rem auto 0 ;
+
+    a{
+        display: block;
+
+        strong{
+            font-weight: 700;
+            font-size: 1.75rem;
+            line-height: 2.118125rem;
+        }
+
+        & + a{
+            margin-top: 2.5rem;
+        }
+
+        h2{
+            margin-top: 0.5rem;
+            font-weight: 400;
+            font-size: 1.125rem;
+            line-height: 1.36125rem;
+            color: #D7D7D7;
+        }
+        
+    }
+}
+
+.author{
+    display: flex;
+    margin-top: 1rem;
+
+    time{
+        font-weight: 400;
+        font-size: 0.875rem;
+        line-height: 1rem;
+        color: #BBBBBB;
+
+        svg{
+            margin-right: 0.5rem;
+        }
+    }
+
+    p{
+        font-weight: 400;
+        font-size: 0.875rem;
+        margin-left: 1rem;
+        line-height: 1rem;
+        color: #BBBBBB;
+        
+        svg{
+            margin-right: 0.5rem;
+        }
+    }
+}
+
+.chargePostsEnable{
+    background-color: transparent;
+    border: none;
+    color:#FF57B2;
+    margin-top: 2rem;
+    cursor: pointer;
+
+    &:hover{
+        span{
+            text-decoration: underline;
+        }
+    }
+    span{
+        font-weight:600 ;
+        font-size: 1.125rem;
+        line-height: 1.36125rem;
+    }
+}
+
+.chargePostsDisabled{
+    display: none;
 }

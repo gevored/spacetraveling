@@ -7,6 +7,7 @@ import Head from 'next/head'
 import Primisc from  '@prismicio/client'
 import { format } from 'date-fns';
 import Link from 'next/link'
+import { FaCalendar , FaStaylinked, FaUser } from 'react-icons/fa';
 import { useState , useEffect} from 'react';
 
 interface Post {
@@ -28,25 +29,68 @@ interface HomeProps {
   postsPagination: PostPagination;
 }
 
- export default function Home(props : HomeProps) {
+ export default function Home({postsPagination} : HomeProps) {
    // TODO
   
+   const [posts , setPosts] = useState<Post[]>(postsPagination.results)
+   const [urlPagination, setUrlPagination] = useState(postsPagination.next_page)
+
+   async function httpFetch(request: RequestInfo) : Promise<any> {
+    const response = await fetch(request);
+    const body = await response.json();
+    return body;
+  }
+
+   const loadRestPost = async () =>{
+
+    const body : PostPagination =  await  httpFetch(urlPagination)    
+    
+    setUrlPagination(body.next_page)
+    setPosts([...posts, ...body.results])
+  }
+   
    return (
     <>
      <Head>
         <title>SpaceTraveling | Posts</title>
       </Head>
 
+
       <main>
         
-        <div className = {styles.container}>
+        <div className = {styles.posts}>
          {
-            props.postsPagination?.results.map(post =>{            
-              return(                
-                <p key= {post.uid}>{post.data.author}</p>                
+            posts?.map(post =>{            
+              return( 
+              <Link key = {post.uid} href = {`/post/${post.uid}`}>
+                  <a>
+                    <strong key= {post.uid}>{post.data.title}</strong> 
+                    <h2>{post.data.subtitle}</h2>
+                    <div className={styles.author}>
+                      <time>
+                        <FaCalendar/>
+                        {post.first_publication_date}
+                      </time>
+                      <p>
+                        <FaUser/>
+                        {post.data.author}
+                      </p>
+                      
+                    </div>
+                  </a>               
+                </Link>                               
               )
-            })
+            })   
           }
+
+          <button
+           type="button" className = {urlPagination ? styles.chargePostsEnable:styles.chargePostsDisabled}
+           onClick = {loadRestPost}
+           >
+            <span>
+            Carregar mais posts
+            </span>
+          </button>
         </div>
       </main>
     </>
@@ -64,7 +108,7 @@ export const getStaticProps : GetStaticProps = async () => {
     }
    );
 
-   const constentsPost  = await postsResponse.results.map(post=>{
+   const constentsPost  =  postsResponse.results.map(post=>{
      return (
        {
          uid:post.uid,
