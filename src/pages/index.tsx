@@ -87,9 +87,9 @@ interface HomeProps {
            type="button" className = {urlPagination ? styles.chargePostsEnable:styles.chargePostsDisabled}
            onClick = {loadRestPost}
            >
-            <span>
+            
             Carregar mais posts
-            </span>
+            
           </button>
         </div>
       </main>

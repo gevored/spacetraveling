@@ -39,7 +39,7 @@ export default function Post({ post }: PostProps) {
   if (router.isFallback) {
     return <div>Carregando...</div>
   }
-  
+
   const readTimeContent = () => {
 
     let countWords = 0
@@ -66,7 +66,7 @@ export default function Post({ post }: PostProps) {
         <title>{post.data.title} | Spacetraveling</title>
       </Head>
       <main className={styles.container}>
-        <img src={String(post?.data.banner)} className = {post?.data.banner?  styles.disableImgBanner : ''}/>
+        {/* <img src={String(post?.data?.banner?.url)} className = {post?.data.banner?  styles.disableImgBanner : ''}/> */}
         <h1>{post?.data?.title}</h1>
         <div className={styles.info}>
           <time>
@@ -103,7 +103,7 @@ export default function Post({ post }: PostProps) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  // const prismic = getPrismicClient();
+  const prismic = getPrismicClient();
   //const posts = await prismic.query(Predicate);
 
   // TODO
@@ -126,7 +126,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     first_publication_date: format(new Date(response.first_publication_date), 'MM/dd/yyyy'),
     data: {
       title: response.data.title,
-      banner: String(response.data.banner),
+      banner: {
+        url:response?.data?.banner ? response?.data?.banner  : '' 
+      },
       author: response.data.author,
       content: response.data.content
     }
