@@ -32,42 +32,46 @@ interface PostProps {
   post: Post;
 }
 
-export default function Post({ post } : PostProps) {
+export default function Post({ post }: PostProps) {
   // TODO
-  // const router = useRouter()
+  const router = useRouter()
 
-  const readTimeContent = ()=>{
+  if (router.isFallback) {
+    return <div>Carregando...</div>
+  }
   
-    let countWords = 0 
+  const readTimeContent = () => {
+
+    let countWords = 0
     for (let indexHeading = 0; indexHeading < post.data.content.length; indexHeading++) {
-      
+
       const element = post.data.content[indexHeading].heading.split(' ').length
       countWords = element + countWords
 
-      for (let indexBody = 0; indexBody < post.data.content[indexHeading].body.length ; indexBody++) {
-        const element =   post.data.content[indexHeading].body[indexBody].text.split(' ').length
+      for (let indexBody = 0; indexBody < post.data.content[indexHeading].body.length; indexBody++) {
+        const element = post.data.content[indexHeading].body[indexBody].text.split(' ').length
         countWords = element + countWords
       }
     }
 
-    return(Math.ceil(countWords/200))
-
+    
+    return (Math.ceil(countWords / 200))
   }
-
-  readTimeContent()
   
+  readTimeContent()
 
   return (
     <>
       <Head>
         <title>{post.data.title} | Spacetraveling</title>
       </Head>
-      <main className = {styles.container}>
+      <main className={styles.container}>
+        <img src={String(post?.data.banner)} className = {post?.data.banner?  styles.disableImgBanner : ''}/>
         <h1>{post?.data?.title}</h1>
         <div className={styles.info}>
           <time>
             <FaCalendar />
-            {post?.first_publication_date}
+            {post.first_publication_date}
           </time>
           <span>
             <FaUser />
@@ -76,7 +80,7 @@ export default function Post({ post } : PostProps) {
           <span>
             <FaClock />
             {`${readTimeContent()} min`}
-            
+
           </span>
         </div>
         <div>
@@ -106,7 +110,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   return {
     paths: [{
-      params:{slug: 'building-great-user-experiences-with-concurrent-mode'}
+      params: { slug: 'building-great-user-experiences-with-concurrent-mode' }
     }],
     fallback: true,
   }
@@ -116,7 +120,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const prismic = getPrismicClient();
 
   const { slug } = params
-  const response: Post = await prismic.getByUID('posts', String(slug), {});
+  const response: Post = await prismic.getByUID('posts ', String(slug), {});
 
   const post = {
     first_publication_date: format(new Date(response.first_publication_date), 'MM/dd/yyyy'),
