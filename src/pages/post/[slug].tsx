@@ -105,20 +105,18 @@ export const getStaticPaths: GetStaticPaths = async () => {
   // TODO
 
   return {
-    paths: [],
-    fallback: "blocking",
+    paths: [{
+      params:{slug: 'building-great-user-experiences-with-concurrent-mode'}
+    }],
+    fallback: true,
   }
 };
-
-
-
-
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const prismic = getPrismicClient();
 
   const { slug } = params
-  const response: Post = await prismic.getByUID('posts ', String(slug), {});
+  const response: Post = await prismic.getByUID('posts', String(slug), {});
 
   const post = {
     first_publication_date: format(new Date(response.first_publication_date), 'MM/dd/yyyy'),
@@ -129,11 +127,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       content: response.data.content
     }
   }
-
-
-
-
-  console.log('olha só:', post)
 
   return {
     props: { post }
